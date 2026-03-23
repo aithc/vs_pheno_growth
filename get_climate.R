@@ -1,10 +1,8 @@
-#========== 提取一下每个点的气候=========================
-
 library(raster)
 
 
 ##=========bioclimate=============
-bio_path <- c('D:/data/bioclimate/wc2.1_30s_bio_1.tif','D:/data/bioclimate/wc2.1_30s_bio_12.tif')
+bio_path <- c('/bioclimate/wc2.1_30s_bio_1.tif','/bioclimate/wc2.1_30s_bio_12.tif')
 
 bio_data <- stack(bio_path)
 bio_data
@@ -19,7 +17,7 @@ head(site_clim)
 
 rm(bio_data)
 ##=======biomes=================
-biome <- raster('D:/data/official_teow/biome.tif')
+biome <- raster('/official_teow/biome.tif')
 biome
 plot(biome)
 
@@ -32,7 +30,7 @@ table(site_clim$biome)
 
 rm(biome)
 ##======dem=================
-dem <- raster('D:/data/dem_30s_elev/wc2.1_30s_elev.tif')
+dem <- raster('/dem_30s_elev/wc2.1_30s_elev.tif')
 dem
 dem_ex <- raster::extract(dem, site_infos[c('longitude','latitude')])
 
