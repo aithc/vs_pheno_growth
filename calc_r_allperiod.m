@@ -1,9 +1,6 @@
-% 计算所有 显著的点的  整个时期内的 模拟树轮和观测树轮的 相关
 
-%%
 clear; close all; clc;  % clear the workspace
 
-%% 读取所有的点的信息
 site_infos = readtable('D:/matlab_file/vs_model_for_spr_try/to_linux/tr_info_use_sig_matlab.csv');
 %length(info)
 re_r = table();
@@ -14,9 +11,8 @@ for i = 1:height(site_infos)
     lat_n = site_infos.('latitude')(i);
     lon_n = site_infos.('longitude')(i);
 
-        % 读取优化后的参数
     disp(sites_name);
-    fitted_file = ['D:/matlab_file/vs_model_for_spr_try/fitted_vsmodel/output_',sites_name{1},'_',int2str(site_infos.used(i)),'.mat'];
+    fitted_file = ['/fitted_vsmodel/output_',sites_name{1},'_',int2str(site_infos.used(i)),'.mat'];
     load(fitted_file);
     tf_1 = output.parameters(1); % minimum temperature (C) for growth
     tf_2 = output.parameters(2);  % growth rate is max in the range T2-T3 (lower optimal temperature, C)
@@ -57,10 +53,7 @@ for i = 1:height(site_infos)
     K_9 = output.parameters(17);  % the period (days) over which to sum temperature to calculate start of growth
     %K_10 = parameter(26);  % the period (days) over which to sum temperature to calculate start soil melting
     
-    
 
-    % 读取气候数据
-    % 原始的
     dataset = data_prepare(sites_name{1},1960,2015,lat_n,lon_n);  % get data
 
     T  = dataset.T;
@@ -74,7 +67,6 @@ for i = 1:height(site_infos)
     syear = dataset.syear;
     eyear = dataset.eyear;
 
-    % 计算原始模型+原始气候数据
     tic % based on testing, this loop may take anywhere from 1 to 20 seconds, depending on your system
     output = vsm_me(T,P,phi,syear,eyear,tf_1,tf_2,tf_3,tf_4,wf_1,wf_2,wf_3,wf_4,SNo,Wo, ... ,
         rootd,rated,a_1,a_2,Tg,SNr,K_9);
