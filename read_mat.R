@@ -1,6 +1,3 @@
-##=================================================
-## 读取mat数据中的控制实验结果
-
 library(dplyr)
 library(tidyr)
 library(lubridate)
@@ -8,29 +5,19 @@ library(ggplot2)
 library(R.matlab)
 
 ##==========================================
-## 试试 读取mat数据
 
-mat_try <- readMat('D:/matlab_file/vs_model_for_spr_try/final_fitted/result_deak187.mat')
+mat_try <- readMat('/final_fitted/result_deak187.mat')
 View(mat_try)
 print(length(mat_try[[1]]))
 
-mat_try <- readMat('D:/matlab_file/vs_model_for_spr_try/final_fitted/result_rawak187.mat')
+mat_try <- readMat('/final_fitted/result_rawak187.mat')
 View(mat_try)
 print(length(mat_try[[1]]))
 
-mat_try <- readMat('D:/matlab_file/vs_model_for_spr_try/final_fitted/result_npak187.mat')
+mat_try <- readMat('/final_fitted/result_npak187.mat')
 View(mat_try)
 print(length(mat_try[[1]]))
 
-## 数据读取进来后没有名字，按顺序为：参数 起始年份 结束年份 年份 纬度 模拟轮宽_细胞数量 模拟轮宽_细胞大小
-##   木质部细胞数量 形成层细胞数量 生长速率 生长速率T 生长速率W 生长速率E 蒸散发 土壤水分 融雪 土壤深度
-##   开始时间 细胞生长开始时间 木质部生长结束时间 分化时间 细胞数量
-##   paras syear eyear nyear lat trw trws nxylem ncam gr grt grw gre trans sm snowde snowme soilde 
-##   fday sday eday difftime cellcount
-##  其中  不考虑物候的模型输出为22项  少一个 开始时间
-
-##  提取需要的变量到dataframe  年值  
-##  2024.09.09 再加上细胞个数
 data_try <- data.frame(trw = t(mat_try$output.de[[6]]),
                        nxylem = t(mat_try$output.de[[8]]),
                        fday = t(mat_try$output.de[[19]]),
@@ -38,7 +25,6 @@ data_try <- data.frame(trw = t(mat_try$output.de[[6]]),
                        eday = t(mat_try$output.de[[21]])
                        )
 
-## 提取需要的变量 日值  需要转化后再合并 10 11 12  14 15 
 data_daily_try <- data.frame(t(mat_try$output.de[[10]]))
 colnames( data_daily_try) <- 1:366
 data_daily_try$year <- 1960:2015
@@ -46,8 +32,7 @@ data_daily_try$year <- 1960:2015
 data_daily_try <- data_daily_try %>% pivot_longer(1:366, names_to = "day", values_to = "value")
 
 ##============================================================================
-## 循环读取每个点的数据
-site_infos <- read.csv('D:/matlab_file/vs_model_for_spr_try/to_linux/tr_info_use_sig_matlab.csv')
+site_infos <- read.csv('/tr_info_use_sig_matlab.csv')
 head(site_infos)
 View(site_infos)
 
@@ -118,11 +103,11 @@ data_np_output_daily <- data.frame()
 for ( i in 1:nrow(site_infos)){
   print(site_infos$site[i])
   
-  file_path_raw <- paste('D:/matlab_file/vs_model_for_spr_try/final_fitted/result_raw',
+  file_path_raw <- paste('/final_fitted/result_raw',
                          site_infos$site[i],'.mat', sep = '')
-  file_path_de <- paste('D:/matlab_file/vs_model_for_spr_try/final_fitted/result_de',
+  file_path_de <- paste('/final_fitted/result_de',
                         site_infos$site[i],'.mat', sep = '')
-  file_path_np <- paste('D:/matlab_file/vs_model_for_spr_try/final_fitted/result_np',
+  file_path_np <- paste('/final_fitted/result_np',
                         site_infos$site[i],'.mat', sep = '')
   
   data_raw_out_year <- read_from_mat_year(file_path_raw)
