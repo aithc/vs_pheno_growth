@@ -17,11 +17,6 @@ function [output] = vsm_no_pheno(T,P,phi,syear,eyear,tf_1,tf_2,tf_3,tf_4,wf_1,wf
 % Output is a structure [output] containing growth and environmental
 % metrics and final simulated ring width
 
-% File History:
-% last modified 5 December 2018 Kevin Anchukaitis
-%
-% Citation: Anchukaitis, Evans, Hughes, Vaganov, VSM: An implementation of the Vaganov-Shashkin Cambial
-%           Growth Model in MATLAB, submitted to Dendrochronologia, 2018
 
 %% some parameters
 ndc = 1;
