@@ -2,7 +2,7 @@
 % prepare dataset for vs model
 
 function data = data_prepare(site,syear,eyear,lat,lon)
-file_path = 'D:/matlab_file/vs_model_for_spr_try/to_linux/climate_crujra/';
+file_path = '/climate_crujra/';
 clim_data =readmatrix([file_path,site,'.csv']);
 
 T = NaN(366,eyear - syear + 1);
@@ -23,7 +23,7 @@ for i = 1:length(syear:eyear)
     end
 end
 
-std_actual_path = 'D:/matlab_file/vs_model_for_spr_try/to_linux/std_data/';
+std_actual_path = '/to_linux/std_data/';
 std_file = readmatrix([std_actual_path,site,'.csv']);
 std_use1 = std_file(:,1:2);
 std_use = std_use1(std_file(:,1) >= syear & std_file(:,1) <= eyear,:);
