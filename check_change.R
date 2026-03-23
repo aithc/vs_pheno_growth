@@ -1,12 +1,7 @@
-#====比较不同模型实验下的结果==============================
-##  
-
 library(dplyr)
 library(tidyr)
 library(ggplot2)
 
-
-##====比较模拟轮宽=============================================================
 ## 
 data_np_output_year$d_nxylem <- data_np_output_year$nxylem - data_raw_output_year$nxylem
 data_de_output_year$d_nxylem <- data_de_output_year$nxylem - data_raw_output_year$nxylem
@@ -58,9 +53,6 @@ ggplot() + geom_line(data = data_np_output_year,aes(year,nxylem,group = site),co
   geom_line(data = data_de_year_sitemid,aes(year,nxylem),color = 'blue',linewidth = 2)
 
 
-
-##=====取几个点看看==========================
-
 ggplot() + geom_line(data = filter(data_np_output_year,site=='swit374'),aes(year,nxylem),
                      color = 'green')+
   geom_line(data = filter(data_raw_output_year,site=='swit374'),aes(year,nxylem),
@@ -79,8 +71,6 @@ ggplot() + geom_line(data = filter(data_np_output_year,site=='az609'),aes(year,d
                      color = 'green')+
   geom_line(data = filter(data_de_output_year,site=='az609'),aes(year,d_nxylem),
             color = 'blue')
-
-##======算一下每一个点最后十年不同实验间 轮宽 物候的差值=======
 
 diff_last10year <- data_raw_output_year %>% filter(year > 2005) %>% select(-trw)
 View(diff_last10year)
@@ -189,7 +179,7 @@ ggplot(data = diff_last10year_mid,aes(longitude,latitude,color=nxylem_pd))+
   theme(text = element_text(family="serif",face='bold',color = 'black'),
         axis.text = element_text(family="serif",size = 12,face = 'bold',color = 'black'))
 
-##物候上的差别
+
 ggplot(data = diff_last10year_mid,aes(longitude,latitude,color=fday_rd))+
   borders('world',size =1,colour = 'black')+
   scale_color_gradient2(name='fday_rd',high = 'red',low='blue',mid='white',midpoint = 0)+
@@ -255,7 +245,7 @@ ggplot(data = diff_last10year_mid,aes(longitude,latitude,color=eday_pd))+
 
 write.csv(diff_last10year_mean,'output_csv/diff_last10year_mean.csv',row.names = FALSE)
 
-## 添加气候信息
+
 diff_last10year_mean <- left_join(diff_last10year_mean,site_clim[c('site','MAT','MAP','biome','dem')], by = 'site')
 
 ggplot(data = diff_last10year_mean, aes(MAT,MAP))+
@@ -270,7 +260,7 @@ ggplot(data = diff_last10year_mean, aes(MAT,MAP))+
   geom_point(aes(color = nxylem_pd), size =5)+
   scale_color_gradient2(name='nxylem_pd',high = 'red',low='blue',mid='white',midpoint = 0)
 
-## 相对变化
+
 diff_last10year_nxylem <- diff_last10year[c('year','site','nxylem','nxylem_rd','nxylem_rp','nxylem_pd')]
 
 diff_last10year_nxylem[c('renxylem_rd')] <- diff_last10year_nxylem[c('nxylem_rd')] / diff_last10year_nxylem['nxylem']
@@ -278,7 +268,6 @@ diff_last10year_nxylem[c('renxylem_rp')] <- diff_last10year_nxylem[c('nxylem_rp'
 diff_last10year_nxylem[c('renxylem_pd')] <- diff_last10year_nxylem[c('nxylem_pd')] / diff_last10year_nxylem['nxylem']
 head(diff_last10year_nxylem)
 
-## 因为有2012年 mo079这个点的 nxylem为0，所以计算相对时出错
 diff_last10year_nxylem <- subset(diff_last10year_nxylem,diff_last10year_nxylem$nxylem != 0)
 
 
@@ -316,7 +305,6 @@ ggplot(data = diff_last10year_nxymean,aes(longitude,latitude,color=renxylem_pd))
   theme(text = element_text(family="serif",face='bold',color = 'black'),
         axis.text = element_text(family="serif",size = 12,face = 'bold',color = 'black'))
 
-## 添加
 diff_last10year_nxymean <- left_join(diff_last10year_nxymean,site_clim[c('site','MAT','MAP','biome','dem')], by = 'site')
 head(diff_last10year_nxymean)
 
@@ -333,9 +321,6 @@ ggplot(data = diff_last10year_nxymean, aes(MAT,MAP))+
   scale_color_gradient2(name='nxylem_pd',high = 'red',low='blue',mid='white',midpoint = 0)
 
 
-##=====比较速率=======
-## 按照r-d的正负 划分点，然后看生长速率的差别
-## GR 要根据物候把之前的都设为0
 site_class <- ifelse(diff_last10year_nxymean$renxylem_rd > 0, 'po','ne')
 site_class_df <- data.frame('site' = diff_last10year_nxymean$site, 'site_class' = site_class)
 head(site_class_df)
@@ -449,7 +434,6 @@ ggplot(data = all_last10daily_summ_np, aes(day, ncell_mean, color = exp_class) )
   xlim(1,365)+
   facet_wrap(.~site_class)
 
-##====计算每一天的生长限制因子=======
 raw_last10_torw <- raw_last10daily %>% mutate(day = as.numeric(day)) %>% 
   mutate(grdiff = grt-grw) %>% 
   group_by(site_class,day) %>% 
@@ -500,7 +484,6 @@ ggplot(data = all_last10_torw, aes(day, grdiff_mean, color = exp_class) )+
   facet_wrap(.~site_class)
 
 
-##=====分析蒸散发和土壤水分的变化=====
 head(all_last10daily_summ_np)
 
 ggplot(data = all_last10daily_summ_np, aes(day, trans_mean, color = exp_class) )+
@@ -517,8 +500,6 @@ ggplot(data = all_last10daily_summ_np, aes(day, sm_mean, color = exp_class) )+
   geom_line(linewidth = 1)+
   facet_wrap(.~site_class)
 
-
-##========拟合一下点之间的分割线========
 
 data_fit_use <- diff_last10year_nxymean[c('site','nxylem_rd','MAT','MAP')]
 data_fit_use['po_ne'] <- ifelse(data_fit_use$nxylem_rd>0, 1, 0)
