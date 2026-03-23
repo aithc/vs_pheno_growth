@@ -1,16 +1,10 @@
-##====画图==============
-##  地图最后用python画，r主要画一下面的统计图
-
 library(dplyr)
 library(tidyr)
 library(ggplot2)
 library(patchwork)
 
 ###=========figure1=======================
-##  nxylem 在MAT和MAP轴上的分布
-##  2026.03.09 加上拟合线 拟合线的计算在 check_change.r 里
 
-## 竖着排列
 fig1_1 <- ggplot(data = diff_last10year_nxymean, aes(MAT,MAP))+
   geom_line(data=fitted_line, aes(MAT,MAP), linewidth = 1.5, alpha = 0.6, color = '#7A8B8B') +
   geom_point(aes(fill = nxylem_rd),size = 5,shape = 21,color = 'gray50',stroke = 0.2)+
@@ -56,7 +50,6 @@ fig1_1/fig1_2/fig1_3+plot_annotation(tag_levels = 'a')+ plot_layout(axis_titles 
 dev.off()
 
 
-## 横着排列
 fig1_1 <- ggplot(data = diff_last10year_mean, aes(MAT,MAP))+
   geom_point(aes(fill = nxylem_rd),size = 5)+
   scale_fill_gradient2(name='Nxylem',high = 'red',low='blue',mid='white',midpoint = 0,
@@ -96,7 +89,6 @@ fig1_1+fig1_2+fig1_3+plot_annotation(tag_levels = 'a')+ plot_layout(axis_titles 
 dev.off()
 
 ###=====figure2=======
-## nxylem 相对
 
 fig2_1 <- ggplot(data = diff_last10year_nxymean, aes(MAT,MAP))+
   geom_line(data=fitted_line, aes(MAT,MAP), linewidth = 1.5, alpha = 0.6, color = '#7A8B8B') +
@@ -142,7 +134,6 @@ fig2_1/fig2_2/fig2_3+plot_annotation(tag_levels = 'a')+ plot_layout(axis_titles 
 
 dev.off()
 
-##横着排列
 fig2_1 <- ggplot(data = diff_last10year_nxymean, aes(MAT,MAP))+
   geom_point(aes(color = renxylem_rd),size = 5)+
   scale_color_gradient2(name='Nxylem',high = 'red',low='blue',mid='white',midpoint = 0,
@@ -183,7 +174,6 @@ dev.off()
 
 
 ###=========figure3============================
-## 生长速率之间的差异
 gruse_last10daily_draw <- all_last10daily_summ_np[c('site_class','day','gruse_mean','gruse_std','exp_class')]
 colnames(gruse_last10daily_draw) <- c('site_class','day','g_mean','g_std','exp_class')
 gruse_last10daily_draw['type'] <- 'GR'
@@ -225,7 +215,6 @@ ggplot(data = all_last10daily_gr_draw, aes(day, g_mean, color = exp_class) )+
 dev.off()
 
 ###===========figure4=====================
-## 蒸散发和土壤水分
 
 all_last10daily_summ_np$exp_class <- factor(all_last10daily_summ_np$exp_class, 
                                             levels = c("raw", "np", "de"), ordered = TRUE)
@@ -264,7 +253,6 @@ fig4_1/fig4_2+plot_annotation(tag_levels = 'a')+ plot_layout(axis_titles = "coll
 dev.off()
 
 ###=======figure5==============
-## 温度和水分胁迫
 all_last10_torw$exp_class <- factor(all_last10_torw$exp_class, 
                                             levels = c("raw", "np", "de"), ordered = TRUE)
 tiff(file="figure/temp_water_lim.tiff", width = 8, height = 5, units = 'in', res = 300, compression = 'lzw')
@@ -285,7 +273,6 @@ ggplot(data = all_last10_torw, aes(day, grdiff_mean, color = exp_class) )+
 dev.off()
 
 ###=====figure6================
-## 细胞数量
 
 all_last10daily_summ_np$exp_class <- factor(all_last10daily_summ_np$exp_class, 
                                     levels = c("raw", "np", "de"), ordered = TRUE)
@@ -307,7 +294,6 @@ ggplot(data = all_last10daily_summ_np, aes(day, ncell_mean, color = exp_class) )
 dev.off()
 
 ###======figure7==========
-##  nxylem 序列
 data_np_output_year <-data_np_output_year %>%  left_join(site_class_df,by='site')
 data_de_output_year <-data_de_output_year %>%  left_join(site_class_df,by='site')
 data_raw_output_year <-data_raw_output_year %>%  left_join(site_class_df,by='site')
